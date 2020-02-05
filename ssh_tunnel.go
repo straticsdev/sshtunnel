@@ -3,16 +3,19 @@ package sshtunnel
 import (
 	"golang.org/x/crypto/ssh"
 	"io"
-	"log"
 	"net"
 )
+
+type Logger interface {
+	Printf(string, ...interface{})
+}
 
 type SSHTunnel struct {
 	Local  *Endpoint
 	Server *Endpoint
 	Remote *Endpoint
 	Config *ssh.ClientConfig
-	Log    *log.Logger
+	Log    Logger
 }
 
 func (tunnel *SSHTunnel) logf(fmt string, args ...interface{}) {
@@ -72,7 +75,6 @@ func (tunnel *SSHTunnel) forward(localConn net.Conn) {
 func NewSSHTunnel(tunnel string, auth ssh.AuthMethod, destination string) *SSHTunnel {
 	// A random port will be chosen for us.
 	localEndpoint := NewEndpoint("localhost:0")
-
 	server := NewEndpoint(tunnel)
 	if server.Port == 0 {
 		server.Port = 22
