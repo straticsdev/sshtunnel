@@ -62,6 +62,8 @@ func (tunnel *SSHTunnel) forward(localConn net.Conn) {
 	tunnel.logf("connected to %s (2 of 2)\n", tunnel.Remote.String())
 
 	copyConn := func(writer, reader net.Conn) {
+		defer writer.Close()
+		defer reader.Close()
 		_, err := io.Copy(writer, reader)
 		if err != nil {
 			tunnel.logf("io.Copy error: %s", err)
