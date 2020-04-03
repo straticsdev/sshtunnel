@@ -68,6 +68,7 @@ func (tunnel *SSHTunnel) forward(localConn net.Conn) {
 		if err != nil {
 			tunnel.logf("io.Copy error: %s", err)
 		}
+		tunnel.logf("closing tunnel socket")
 	}
 
 	go copyConn(localConn, remoteConn)
